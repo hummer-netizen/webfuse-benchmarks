@@ -1,0 +1,30 @@
+{
+  "date": "2026-04-07",
+  "session": "s20izbmqbo7DQzaLJWkIeAwZdA",
+  "space": "webfuse-mcp-demo (1960)",
+  "findings": {
+    "domSnapshot_returns_extension_overlay": true,
+    "domSnapshot_returns_gym_content": false,
+    "includeShadowDom_option_accepted": false,
+    "includeShadowDom_error": "invalid params: unexpected additional properties [\"includeShadowDom\"]",
+    "accessibilityTree_returns_extension_overlay": true,
+    "actuation_targets_real_page": true,
+    "act_click_css_works_light_dom": true,
+    "act_click_css_works_shadow_dom": false,
+    "wfid_targeting_possible": false,
+    "wfids_assigned_to_shadow_content": false
+  },
+  "root_cause": "see.domSnapshot and see.accessibilityTree return the Webfuse extension overlay page, not the co-browsed page. The includeShadowDom option is not recognized by the current API version. WF-IDs are assigned to extension elements, not page elements.",
+  "blocker": "Perception layer returns wrong document. Until domSnapshot returns the co-browsed page content, shadow DOM piercing cannot be tested via WF-IDs.",
+  "tests": [
+    {"label": "Snapshot WITHOUT includeShadowDom", "status": "PASS", "detail": "Returns extension overlay (2676 chars, no gym content)"},
+    {"label": "Snapshot WITH includeShadowDom", "status": "FAIL", "detail": "Option rejected: unexpected additional property"},
+    {"label": "Shadow content in snapshot", "status": "FAIL", "detail": "Snapshot does not contain gym page at all"},
+    {"label": "WF-IDs on shadow elements", "status": "FAIL", "detail": "WF-IDs only on extension overlay elements"},
+    {"label": "Click shadow host CSS", "status": "FAIL", "detail": "Cannot resolve #gym-shadow-host (overlay, not page)"},
+    {"label": "Type by WF-ID into shadow", "status": "FAIL", "detail": "No WF-IDs available for shadow content"},
+    {"label": "Click by WF-ID shadow button", "status": "FAIL", "detail": "No WF-IDs available for shadow content"},
+    {"label": "Nested shadow WF-ID", "status": "FAIL", "detail": "Nested shadow content invisible"},
+    {"label": "DelegatesFocus WF-ID", "status": "FAIL", "detail": "DelegatesFocus content invisible"}
+  ]
+}
